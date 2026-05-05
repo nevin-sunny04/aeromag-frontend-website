@@ -1,0 +1,36 @@
+.magslider .swiper-button-prev {
+  color: white;
+  background-color: var(--primary);
+  width: 50px;
+  height: 30px;
+  border-radius: 10px 0 0 0;
+  position: absolute !important;
+  top: auto !important;
+
+  left: 33.3% !important;
+  bottom: 0 !important;
+
+  &::after {
+    font-size: 18px !important;
+    font-weight: bold !important;
+  }
+}
+
+.magslider .swiper-button-next {
+  color: white;
+  background-color: white;
+  width: 50px;
+  height: 30px;
+  border-radius: 0 10px 0 0;
+  position: absolute !important;
+  top: auto !important;
+
+  right: 33.5% !important;
+  bottom: 0 !important;
+
+  &::after {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: var(--primary);
+  }
+}
