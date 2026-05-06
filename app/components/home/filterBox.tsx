@@ -25,7 +25,7 @@ export default function Filter({
       <div className="px-3 py-2 shadow-sm sub-heading rounded-sm bg-gray-100 dark:bg-secondary mb-4">
         <h5 className="small-heading ">Categories</h5>
       </div>
-      {categories.map((item, index) => (
+      {(categories ?? []).map((item, index) => (
         <div
           key={`${item.name}_${index}`}
           className="mt-3 ps-3 flex items-center gap-3"

@@ -16,7 +16,7 @@ export const useHomeData = (fallbackData?: HomeApiData) => {
   });
 
   return {
-    data: data || fallbackData, // Use fallback only if no data yet
+    data: (data && !('error' in data) && !('detail' in data)) ? data : fallbackData,
     error,
     isLoading,
     mutate: refetch // Maintain SWR-compatible API

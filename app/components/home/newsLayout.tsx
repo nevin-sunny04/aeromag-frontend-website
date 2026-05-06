@@ -29,7 +29,7 @@ export default function NewsLayout({
   };
   latestnews: News[];
 }) {
-  const [category, setCategory] = useState(categories[0]?.slug);
+  const [category, setCategory] = useState(categories?.[0]?.slug ?? '');
 
   // Don't use fallback data to ensure fresh content
   const { news, isLoading } = useNewsData(category);
