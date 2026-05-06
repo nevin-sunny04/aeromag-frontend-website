@@ -55,7 +55,7 @@ export default function SideBar({
   };
   return (
     <div className="xl:w-3/12 overflow-hidden lg:w-3/12 md:w-4/12 w-full sticky top-5 left-0 flex flex-col gap-5">
-      {!isMagazinePage && (
+      {!isMagazinePage && data.featured_magazine?.category?.[0]?.slug && (
         <div className="p-5 border relative    rounded-sm">
           <h4 className="heading mb-3 text-center">{data.featured_magazine.title}</h4>
           <Link
@@ -125,9 +125,9 @@ export default function SideBar({
           </button>
         </form>
       </div>
-      {data.normal_add.length === 0 && [1, 2, 3].map((_, i) => <Placeholder key={`holder_${i}`} />)}
+      {(data.normal_add?.length ?? 0) === 0 && [1, 2, 3].map((_, i) => <Placeholder key={`holder_${i}`} />)}
 
-      {data.normal_add.length === 1 && (
+      {data.normal_add?.length === 1 && (
         <div className="flex flex-col gap-5 rounded-md overflow-hidden">
           <Link
             href={data.normal_add[0].url}
@@ -147,7 +147,7 @@ export default function SideBar({
         </div>
       )}
 
-      {data.normal_add.length === 2 && (
+      {data.normal_add?.length === 2 && (
         <div className="flex flex-col gap-5 rounded-md overflow-hidden">
           <Link
             href={data.normal_add[0].url}
@@ -179,7 +179,7 @@ export default function SideBar({
         </div>
       )}
 
-      {data.normal_add.length > 2 &&
+      {(data.normal_add?.length ?? 0) > 2 &&
         data.normal_add.map((ad, index) => (
           <Link
             href={ad.url}
