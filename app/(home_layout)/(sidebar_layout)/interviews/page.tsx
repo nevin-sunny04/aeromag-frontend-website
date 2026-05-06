@@ -23,6 +23,21 @@ export default async function Page({
   const interviewData = await apiRequest(
     `/interviews/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
   );
+
+  if (!interviewData || 'error' in interviewData || !Array.isArray(interviewData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No Interviews found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any interviews. `}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(interviewData.count / limit);
 
   return (

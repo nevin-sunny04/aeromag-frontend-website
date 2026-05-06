@@ -26,6 +26,21 @@ export default async function Page({
     `/news/?category=${category}&offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
     { next: { revalidate: 300, tags: ['news', 'news-list', `news-category-${category}`] } },
   );
+
+  if (!newsData || 'error' in newsData || !Array.isArray(newsData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No News found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any news in the ${category?.toLowerCase()}. `}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(newsData.count / limit);
 
   return (

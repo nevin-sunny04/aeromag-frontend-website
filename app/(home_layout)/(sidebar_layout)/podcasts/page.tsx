@@ -23,6 +23,21 @@ export default async function Page({
   const podsData = await apiRequest(
     `/podcasts/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
   );
+
+  if (!podsData || 'error' in podsData || !Array.isArray(podsData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No Podcasts found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any podcasts. `}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(podsData.count / limit);
 
   return (

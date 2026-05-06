@@ -10,7 +10,7 @@ import { Event } from '@/app/utils/types';
 export default function Events({ events }: { events: Event[] }) {
   // Create infinite slides by duplicating events if needed
   const infiniteEvents = useMemo(() => {
-    if (events.length === 0) return [];
+    if (!events || events.length === 0) return [];
     // Always duplicate to ensure smooth looping (minimum 15 slides for 5 slidesPerView)
     const minSlides = 15;
     if (events.length < minSlides) {

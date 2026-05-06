@@ -8,7 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ListCard from '../news/newsCard';
 
 export default function OtherTabs({ tabsData, ad }: { tabsData: Tab[]; ad: ad }) {
-  const [selectedTab, setSelectedTab] = useState(tabsData[0].title.toLowerCase());
+  const [selectedTab, setSelectedTab] = useState(tabsData?.[0]?.title?.toLowerCase() ?? '');
+
+  if (!tabsData || tabsData.length === 0) return null;
 
   return (
     <div className="container flex lg:flex-row flex-col items-center gap-5 my-8">

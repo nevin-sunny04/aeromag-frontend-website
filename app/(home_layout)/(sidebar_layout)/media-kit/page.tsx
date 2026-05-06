@@ -20,6 +20,20 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
     `/mediakit/?limit=${limit}&page=${(Number(page) - 1) * limit || 0}`,
   );
 
+  if (!mediakitData || 'error' in mediakitData || !Array.isArray(mediakitData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No Mediakits found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any Mediakits.`}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(mediakitData.count / limit);
   return (
     <div className="space-y-8">

@@ -13,6 +13,7 @@ interface BannerData {
 }
 
 export default function Banner({ data }: { data: BannerData[] }) {
+  if (!data || data.length === 0) return null;
   return (
     <div className="container banner-wrapper mt-2">
       <Swiper

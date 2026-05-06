@@ -17,6 +17,20 @@ export default async function Page({
 
   const galleryData = await apiRequest(`/gallery/?offset=${offset}&limit=${limit}`);
 
+  if (!galleryData || 'error' in galleryData || !Array.isArray(galleryData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No Galleries found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any galleries. `}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(galleryData.count / limit);
 
   return (

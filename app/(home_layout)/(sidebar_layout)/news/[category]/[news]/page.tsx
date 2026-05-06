@@ -48,6 +48,7 @@ export default async function Page({
     !recentData ||
     "error" in recentData ||
     "detail" in recentData ||
+    !Array.isArray(recentData.results) ||
     !categories ||
     "error" in categories ||
     "detail" in categories ||

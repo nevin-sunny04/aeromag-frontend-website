@@ -23,6 +23,21 @@ export default async function Page({
   const videosData = await apiRequest(
     `/videos/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
   );
+
+  if (!videosData || 'error' in videosData || !Array.isArray(videosData.results)) {
+    return (
+      <div className="text-center mt-10">
+        <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full text-primary flex items-center justify-center mb-6">
+          <NotFoundSvg />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No Videos found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {`We couldn't find any videos.`}
+        </p>
+      </div>
+    );
+  }
+
   const totalPages = Math.ceil(videosData.count / limit);
 
   return (
