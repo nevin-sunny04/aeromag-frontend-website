@@ -4,7 +4,7 @@ import { Mails, Search, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { Category } from '@/app/utils/types';
 import getSuggestions from './getSearchFields';
 import { Navbar } from './navBar';
@@ -46,53 +46,34 @@ export default function BottomBar({
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const closeResults = () => {
     setShowResults(false);
   };
 
-  const handleSearchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-
+  const performSearch = useCallback(async (value: string) => {
+    if (!value.trim()) return;
     setIsLoading(true);
     setShowResults(true);
-
     try {
-      const data = await getSuggestions(query);
-
+      const data = await getSuggestions(value);
       if (data.status === 'success' && Array.isArray(data.results)) {
-        const normalizedQuery = query.toLowerCase();
-
-        // Ranking logic
+        const normalizedQuery = value.toLowerCase();
         const rankedResults = [...data.results].sort((a: SearchResult, b: SearchResult) => {
           const aTitle = (a.title || a.name || '').toLowerCase();
           const bTitle = (b.title || b.name || '').toLowerCase();
-
           const aExact = aTitle === normalizedQuery ? 1 : 0;
           const bExact = bTitle === normalizedQuery ? 1 : 0;
-
-          if (aExact !== bExact) {
-            return bExact - aExact; // Exact matches first
-          }
-
+          if (aExact !== bExact) return bExact - aExact;
           const aStarts = aTitle.startsWith(normalizedQuery) ? 1 : 0;
           const bStarts = bTitle.startsWith(normalizedQuery) ? 1 : 0;
-
-          if (aStarts !== bStarts) {
-            return bStarts - aStarts; // Titles starting with query next
-          }
-
+          if (aStarts !== bStarts) return bStarts - aStarts;
           const aIncludes = aTitle.includes(normalizedQuery) ? 1 : 0;
           const bIncludes = bTitle.includes(normalizedQuery) ? 1 : 0;
-
-          if (aIncludes !== bIncludes) {
-            return bIncludes - aIncludes; // Partial matches after that
-          }
-
-          return 0; // Keep original order if tie
+          if (aIncludes !== bIncludes) return bIncludes - aIncludes;
+          return 0;
         });
-
         setSearchResults(rankedResults);
       } else {
         setSearchResults([]);
@@ -103,6 +84,25 @@ export default function BottomBar({
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    if (!value.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+    debounceTimer.current = setTimeout(() => performSearch(value), 300);
+  };
+
+  const handleSearchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    await performSearch(query);
   };
 
   const clearSearch = () => {
@@ -229,7 +229,7 @@ export default function BottomBar({
               >
                 <input
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={handleInputChange}
                   placeholder="Search..."
                   className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:placeholder-gray-400 rounded-lg text-sm py-3 px-4 text-black dark:text-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   autoFocus
@@ -262,7 +262,7 @@ export default function BottomBar({
           >
             <input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleInputChange}
               placeholder="Search..."
               className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:placeholder-gray-400 rounded-lg text-sm py-2.5 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black dark:text-white pr-12"
             />
