@@ -166,12 +166,7 @@ export default function Footer({
           </div>
           <div className="border-t font-extralight  border-white mt-4 gap-5 py-4 text-sm flex flex-col md:flex-row justify-between items-center">
             <p>Copyright {new Date().getFullYear()} All rights reserved</p>
-            <p>
-              Website designed by{" "}
-              <Link href="https://zinavo.in" target="_blank">
-                Zinavo
-              </Link>
-            </p>
+
             <div className="flex gap-4">
               {policy.map((policy) => (
                 <Link
