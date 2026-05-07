@@ -31,7 +31,7 @@ export default async function RootLayout({
     return (
       <div className="container relative my-5">
         <div className="flex md:flex-row flex-col items-start gap-7">
-          <div className="w-full min-w-0 overflow-x-hidden"> {children}</div>
+          <div className="w-full min-w-0"> {children}</div>
           {/* Sidebar omitted due to error */}
         </div>
       </div>
@@ -48,7 +48,7 @@ export default async function RootLayout({
         />
       </div>
       <div className="flex md:flex-row flex-col items-start gap-7">
-        <div className="lg:w-9/12 xl:w-9/12 md:w-8/12 w-full min-w-0 overflow-x-hidden"> {children}</div>
+        <div className="lg:w-9/12 xl:w-9/12 md:w-8/12 w-full min-w-0"> {children}</div>
         <SideBar data={base.sidebar} />
       </div>
     </div>
