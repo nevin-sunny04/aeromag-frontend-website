@@ -22,6 +22,7 @@ export default async function Page({
 
   const videosData = await apiRequest(
     `/videos/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
+    { next: { revalidate: 3600, tags: ['videos', 'videos-list'] } },
   );
 
   if (!videosData || 'error' in videosData || !Array.isArray(videosData.results)) {

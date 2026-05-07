@@ -5,17 +5,15 @@ import Footer from "../components/footer";
 import Header from "../components/header";
 import SuccessModal from "../components/subscription/SuccessModal";
 
-export const dynamic = "force-dynamic";
-
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const [magazineCat, categories, base] = await Promise.all([
-    apiRequest(`/magazines-category`, { next: { revalidate: 0 } }),
-    apiRequest(`/news-category/`, { next: { revalidate: 0 } }),
-    apiRequest(`/base/`, { next: { revalidate: 0 } }),
+    apiRequest(`/magazines-category`, { next: { revalidate: 3600, tags: ['magazine-categories'] } }),
+    apiRequest(`/news-category/`, { next: { revalidate: 3600, tags: ['news-categories'] } }),
+    apiRequest(`/base/`, { next: { revalidate: 3600, tags: ['base-config'] } }),
   ]);
 
   // Defensive check for API errors

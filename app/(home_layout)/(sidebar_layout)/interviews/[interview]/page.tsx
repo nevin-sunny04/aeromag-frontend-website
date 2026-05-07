@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ interview: string }>;
 }): Promise<Metadata> {
   const slug = (await params).interview;
-  const interviewData = (await apiRequest(`/interviews/?slug=${slug}`)) as Interview;
+  const interviewData = (await apiRequest(`/interviews/?slug=${slug}`, { next: { revalidate: 3600, tags: ['interviews', `interview-${slug}`] } })) as Interview;
 
   return {
     title: interviewData?.page_title || interviewData?.title,
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ interview: string }> }) {
   const { interview } = await params;
-  const interviewData = (await apiRequest(`/interviews/?slug=${interview}`)) as Interview;
+  const interviewData = (await apiRequest(`/interviews/?slug=${interview}`, { next: { revalidate: 3600, tags: ['interviews', `interview-${interview}`] } })) as Interview;
 
   return (
     <div>

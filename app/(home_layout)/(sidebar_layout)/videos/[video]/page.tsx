@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ video: string }>;
 }): Promise<Metadata> {
   const slug = (await params).video;
-  const Data = await apiRequest(`/videos/?slug=${slug}`);
+  const Data = await apiRequest(`/videos/?slug=${slug}`, { next: { revalidate: 3600, tags: ['videos', `video-${slug}`] } });
 
   return {
     title: Data?.page_title || Data?.title,
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ video: string }> }) {
   const slug = (await params).video;
-  const video = (await apiRequest(`/videos/?slug=${slug}`)) as video;
+  const video = (await apiRequest(`/videos/?slug=${slug}`, { next: { revalidate: 3600, tags: ['videos', `video-${slug}`] } })) as video;
 
   return (
     <div>

@@ -9,9 +9,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const [magazineCat, categories, base] = await Promise.all([
-    apiRequest(`/magazines-category/`),
-    apiRequest(`/news-category/`),
-    apiRequest(`/base/`),
+    apiRequest(`/magazines-category/`, { next: { revalidate: 3600, tags: ['magazine-categories'] } }),
+    apiRequest(`/news-category/`, { next: { revalidate: 3600, tags: ['news-categories'] } }),
+    apiRequest(`/base/`, { next: { revalidate: 3600, tags: ['base-config'] } }),
   ]);
 
   // Defensive check for API errors

@@ -15,7 +15,7 @@ export default async function Page({
   // use offset = (page - 1) * limit
   const offset = (page - 1) * limit;
 
-  const galleryData = await apiRequest(`/gallery/?offset=${offset}&limit=${limit}`);
+  const galleryData = await apiRequest(`/gallery/?offset=${offset}&limit=${limit}`, { next: { revalidate: 3600, tags: ['gallery', 'gallery-list'] } });
 
   if (!galleryData || 'error' in galleryData || !Array.isArray(galleryData.results)) {
     return (

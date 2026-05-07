@@ -36,7 +36,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const slug = (await params).magazine;
-    const data = (await apiRequest(`/magazines/?slug=${slug}`)) as Magazine;
+    const data = (await apiRequest(`/magazines/?slug=${slug}`, { next: { revalidate: 3600, tags: ['magazines', `magazine-${slug}`] } })) as Magazine;
 
     return {
       title: data?.page_title || data?.title || 'Aeromagasia Magazine',
@@ -56,7 +56,7 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: Promise<{ magazine: string }> }) {
   try {
     const magazine = (await params).magazine;
-    const magazineData = (await apiRequest(`/magazines/?slug=${magazine}`)) as Magazine;
+    const magazineData = (await apiRequest(`/magazines/?slug=${magazine}`, { next: { revalidate: 3600, tags: ['magazines', `magazine-${magazine}`] } })) as Magazine;
 
     // Handle case where magazine is not found
     if (!magazineData) {

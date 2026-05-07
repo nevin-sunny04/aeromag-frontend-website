@@ -22,6 +22,7 @@ export default async function Page({
 
   const interviewData = await apiRequest(
     `/interviews/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
+    { next: { revalidate: 3600, tags: ['interviews', 'interviews-list'] } },
   );
 
   if (!interviewData || 'error' in interviewData || !Array.isArray(interviewData.results)) {

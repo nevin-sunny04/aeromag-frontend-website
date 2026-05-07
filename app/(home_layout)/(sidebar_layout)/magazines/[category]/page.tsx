@@ -12,7 +12,7 @@ export async function generateMetadata() {
 export default async function Page({ params }: { params: Promise<{ category: string }> }) {
   const category = (await params).category;
   const limit = 12;
-  const magazineData = await apiRequest(`/magazines/?category=${category}&limit=${limit}`);
+  const magazineData = await apiRequest(`/magazines/?category=${category}&limit=${limit}`, { next: { revalidate: 3600, tags: ['magazines', 'magazines-list', `magazines-category-${category}`] } });
 
   return (
     <div>

@@ -10,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ gallery: string }>;
 }): Promise<Metadata> {
   const slug = (await params).gallery;
-  const galleryData = (await apiRequest(`/gallery/?slug=${slug}`)) as GalleryItem;
+  const galleryData = (await apiRequest(`/gallery/?slug=${slug}`, { next: { revalidate: 3600, tags: ['gallery', `gallery-${slug}`] } })) as GalleryItem;
 
   return {
     title: galleryData?.page_title || galleryData?.title,
@@ -21,7 +21,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ gallery: string }> }) {
   const slug = (await params).gallery;
-  const galleryData = (await apiRequest(`/gallery/?slug=${slug}`)) as GalleryItem;
+  const galleryData = (await apiRequest(`/gallery/?slug=${slug}`, { next: { revalidate: 3600, tags: ['gallery', `gallery-${slug}`] } })) as GalleryItem;
 
   return (
     <>

@@ -18,6 +18,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
   const limit = 12;
   const mediakitData = await apiRequest(
     `/mediakit/?limit=${limit}&page=${(Number(page) - 1) * limit || 0}`,
+    { next: { revalidate: 3600, tags: ['mediakit', 'mediakit-list'] } },
   );
 
   if (!mediakitData || 'error' in mediakitData || !Array.isArray(mediakitData.results)) {

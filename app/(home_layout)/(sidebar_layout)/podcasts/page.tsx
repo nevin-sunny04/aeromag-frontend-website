@@ -22,6 +22,7 @@ export default async function Page({
 
   const podsData = await apiRequest(
     `/podcasts/?offset=${(Number(page) - 1) * limit || 0}&limit=${limit}`,
+    { next: { revalidate: 3600, tags: ['podcasts', 'podcasts-list'] } },
   );
 
   if (!podsData || 'error' in podsData || !Array.isArray(podsData.results)) {

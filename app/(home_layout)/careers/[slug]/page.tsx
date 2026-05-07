@@ -36,7 +36,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   let data: CareersDataType | null = null;
 
   try {
-    const res = await apiRequest(`/career/${slug}`);
+    const res = await apiRequest(`/career/${slug}`, { next: { revalidate: 3600, tags: ['careers', `career-${slug}`] } });
     if (!res) throw new Error('No data returned from API');
     data = res as CareersDataType;
     console.log(res)

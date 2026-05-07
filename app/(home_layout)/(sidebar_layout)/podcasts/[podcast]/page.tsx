@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ podcast: string }>;
 }): Promise<Metadata> {
   const slug = (await params).podcast;
-  const Data = await apiRequest(`/podcasts/?slug=${slug}`);
+  const Data = await apiRequest(`/podcasts/?slug=${slug}`, { next: { revalidate: 3600, tags: ['podcasts', `podcast-${slug}`] } });
 
   return {
     title: Data?.page_title || Data?.title,
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ podcast: string }> }) {
   const { podcast } = await params;
-  const podcastData = (await apiRequest(`/podcasts/?slug=${podcast}`)) as Podcast;
+  const podcastData = (await apiRequest(`/podcasts/?slug=${podcast}`, { next: { revalidate: 3600, tags: ['podcasts', `podcast-${podcast}`] } })) as Podcast;
 
   return (
     <div>
