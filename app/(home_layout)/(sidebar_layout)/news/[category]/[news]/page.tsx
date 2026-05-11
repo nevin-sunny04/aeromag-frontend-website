@@ -3,6 +3,7 @@ import Byline from "@/app/components/byline";
 import RecentPosts from "@/app/components/news/singlenews/RecentPosts";
 import { Category, News } from "@/app/utils/types";
 import { apiRequest } from "@/lib/apiClient";
+import { sanitizeContent } from "@/lib/sanitizeContent";
 
 // export const dynamic = "force-dynamic";
 
@@ -106,8 +107,8 @@ export default async function Page({
         />
       </div>*/}
       <div
-        className="content text-justify space-y-4"
-        dangerouslySetInnerHTML={{ __html: newsData.content }}
+        className="content space-y-4"
+        dangerouslySetInnerHTML={{ __html: sanitizeContent(newsData.content) }}
       ></div>
 
       <p className="text-center my-8 text-lg font-semibold">

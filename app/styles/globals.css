@@ -100,6 +100,15 @@
 @utility content {
   font-size: 15px;
   line-height: 25px;
+  overflow-wrap: break-word;
+
+  img,
+  video,
+  iframe,
+  table {
+    max-width: 100%;
+    height: auto;
+  }
 
   /* Default list styles */
   ul {
@@ -121,6 +130,10 @@
   @media screen and (max-width: 600px) {
     font-size: 14px;
   }
+}
+
+.content .ql-align-justify {
+  text-align: left !important;
 }
 
 @utility sub-content {

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import ArchiveGrid from '@/app/components/magazine-archive/archiveGrid';
 
 export async function generateMetadata() {
@@ -11,5 +12,9 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  return <ArchiveGrid />;
+  return (
+    <Suspense>
+      <ArchiveGrid />
+    </Suspense>
+  );
 }

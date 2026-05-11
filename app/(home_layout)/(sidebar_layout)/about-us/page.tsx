@@ -1,4 +1,5 @@
 import { apiRequest } from '@/lib/apiClient';
+import { sanitizeContent } from '@/lib/sanitizeContent';
 
 async function getData() {
   const res = await apiRequest('about-us', { next: { revalidate: 86400, tags: ['about-us'] } });
@@ -21,7 +22,7 @@ export default async function Page() {
     <div className="space-y-3">
       <h1 className="heading font-bold text-primary">About Us</h1>
       <div
-        dangerouslySetInnerHTML={{ __html: data.content }}
+        dangerouslySetInnerHTML={{ __html: sanitizeContent(data.content) }}
         className="space-y-6 content"
       />
     </div>

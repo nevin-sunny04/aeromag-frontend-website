@@ -4,6 +4,7 @@ import Byline from '@/app/components/byline';
 import AudioPlayer from '@/app/components/Podcast/audioPlayer';
 import { Interview } from '@/app/utils/types';
 import { apiRequest } from '@/lib/apiClient';
+import { sanitizeContent } from '@/lib/sanitizeContent';
 
 // Metadata function
 export async function generateMetadata({
@@ -61,7 +62,7 @@ export default async function Page({ params }: { params: Promise<{ interview: st
       {/* Content */}
       <div
         className="content mt-10"
-        dangerouslySetInnerHTML={{ __html: interviewData.content }}
+        dangerouslySetInnerHTML={{ __html: sanitizeContent(interviewData.content) }}
       ></div>
     </div>
   );

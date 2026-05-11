@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { apiRequest } from '@/lib/apiClient';
+import { sanitizeContent } from '@/lib/sanitizeContent';
 
 // Metadata function
 export async function generateMetadata({
@@ -26,8 +27,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <h1 className="heading  font-bold  dark:text-white mb-2">{page.title}</h1>
 
       <div
-        className="content mt-5 text-justify space-y-4"
-        dangerouslySetInnerHTML={{ __html: page.content }}
+        className="content mt-5 space-y-4"
+        dangerouslySetInnerHTML={{ __html: sanitizeContent(page.content) }}
       ></div>
     </div>
   );
