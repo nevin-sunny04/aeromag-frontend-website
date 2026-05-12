@@ -9,6 +9,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { ThemeProvider } from "./components/themeProvider";
 import { QueryProvider } from "@/lib/providers/queryProvider";
+import { PageTracker } from "./components/PageTracker";
 
 const asap = Asap({
   variable: "--font-asap",
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={` ${asap.className} antialiased`}>
+        <PageTracker />
         <QueryProvider>
           <ThemeProvider
             attribute="class"
