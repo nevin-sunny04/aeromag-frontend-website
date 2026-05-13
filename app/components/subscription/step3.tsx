@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Script from "next/script";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Slide, toast } from "react-toastify";
 import { z } from "zod";
@@ -93,6 +93,7 @@ export default function Step3() {
   const { data, setData } = useSubStore();
   const [isLoading, setIsLoading] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const keepAliveRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [billingCityIsOther, setBillingCityIsOther] = useState(false);
   const [shippingCityIsOther, setShippingCityIsOther] = useState(false);
 
@@ -210,7 +211,11 @@ export default function Step3() {
               : undefined,
 
             handler: async function (response: RazorResponse) {
-            const verifyPayload = {
+              if (keepAliveRef.current) {
+                clearInterval(keepAliveRef.current);
+                keepAliveRef.current = null;
+              }
+              const verifyPayload = {
               step: "payment_verify",
 
               ...(data.subscription?.auto_renew === true
@@ -246,6 +251,9 @@ export default function Step3() {
         }
 
         const payment = new window.Razorpay(paymentData);
+        keepAliveRef.current = setInterval(() => {
+          fetch('/api/keepalive').catch(() => {});
+        }, 30_000);
         payment.open();
       } else {
         // Show error message from backend or generic error
