@@ -5,7 +5,7 @@ import { apiRequest } from '@/lib/apiClient';
 export const dynamic = 'force-dynamic';
 
 async function getPlans() {
-  const data = await apiRequest('plans/');
+  const data = await apiRequest('plans/', { next: { revalidate: 3600, tags: ['plans'] } });
   return data;
 }
 
