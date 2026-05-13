@@ -11,6 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { INDIA_CITIES, INDIA_STATES } from "@/lib/india-locations";
 import { submitSubscription } from "@/lib/action/submitSubscription";
 import { verifySubscription } from "@/lib/action/verifySubscription";
 import {
@@ -91,6 +99,7 @@ export default function Step3() {
     handleSubmit,
     watch,
     control,
+    setValue,
     formState: { errors },
   } = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
@@ -117,6 +126,15 @@ export default function Step3() {
   });
 
   const watchSameAsBilling = watch("sameAsBilling");
+  const watchBillingState = watch("billingAddress.state");
+  const watchShippingState = watch("shippingAddress.state");
+
+  const billingCities = watchBillingState
+    ? (INDIA_CITIES[watchBillingState as keyof typeof INDIA_CITIES] ?? [])
+    : [];
+  const shippingCities = watchShippingState
+    ? (INDIA_CITIES[watchShippingState as keyof typeof INDIA_CITIES] ?? [])
+    : [];
 
   const onSubmit = async (formData: AddressFormData) => {
     setIsLoading(true);
@@ -354,14 +372,30 @@ export default function Step3() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="billing-state" className="text-[16px]">
-                    State
-                  </Label>
-                  <Input
-                    className="mt-3 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
-                    id="billing-state"
-                    placeholder="State"
-                    {...register("billingAddress.state")}
+                  <Label className="text-[16px]">State</Label>
+                  <Controller
+                    name="billingAddress.state"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={(val) => {
+                            field.onChange(val);
+                            setValue("billingAddress.city", "");
+                          }}
+                      >
+                        <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                          <SelectValue placeholder="Select State" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[260px]">
+                          {INDIA_STATES.map((s) => (
+                            <SelectItem key={s} value={s} className="text-xs">
+                              {s}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
                   {errors.billingAddress?.state && (
                     <p className="text-sm text-red-500">
@@ -370,14 +404,32 @@ export default function Step3() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="billing-city" className="text-[16px]">
-                    City
-                  </Label>
-                  <Input
-                    className="mt-3 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
-                    id="billing-city"
-                    placeholder="City"
-                    {...register("billingAddress.city")}
+                  <Label className="text-[16px]">City</Label>
+                  <Controller
+                    name="billingAddress.city"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={!watchBillingState}
+                      >
+                        <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                          <SelectValue
+                            placeholder={
+                              watchBillingState ? "Select City" : "Select state first"
+                            }
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[260px]">
+                          {billingCities.map((c) => (
+                            <SelectItem key={c} value={c} className="text-xs">
+                              {c}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
                   {errors.billingAddress?.city && (
                     <p className="text-sm text-red-500">
@@ -466,14 +518,30 @@ export default function Step3() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="shipping-state" className="text-[16px]">
-                      State
-                    </Label>
-                    <Input
-                      className="mt-3 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
-                      id="shipping-state"
-                      placeholder="State"
-                      {...register("shippingAddress.state")}
+                    <Label className="text-[16px]">State</Label>
+                    <Controller
+                      name="shippingAddress.state"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={(val) => {
+                            field.onChange(val);
+                            setValue("shippingAddress.city", "");
+                          }}
+                        >
+                          <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                            <SelectValue placeholder="Select State" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[260px]">
+                            {INDIA_STATES.map((s) => (
+                              <SelectItem key={s} value={s} className="text-xs">
+                                {s}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     />
                     {errors.shippingAddress?.state && (
                       <p className="text-sm text-red-500">
@@ -482,14 +550,32 @@ export default function Step3() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="shipping-city" className="text-[16px]">
-                      City
-                    </Label>
-                    <Input
-                      className="mt-3 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
-                      id="shipping-city"
-                      placeholder="City"
-                      {...register("shippingAddress.city")}
+                    <Label className="text-[16px]">City</Label>
+                    <Controller
+                      name="shippingAddress.city"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          disabled={!watchShippingState}
+                        >
+                          <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                            <SelectValue
+                              placeholder={
+                                watchShippingState ? "Select City" : "Select state first"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[260px]">
+                            {shippingCities.map((c) => (
+                              <SelectItem key={c} value={c} className="text-xs">
+                                {c}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     />
                     {errors.shippingAddress?.city && (
                       <p className="text-sm text-red-500">
