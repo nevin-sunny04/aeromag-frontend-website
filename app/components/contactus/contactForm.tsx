@@ -53,10 +53,10 @@ export function ContactForm() {
     if (response.success) {
       toast.success(`Thank you for your message. We'll get back to you soon.!`, {
         position: 'bottom-right',
-        autoClose: 2000,
-        hideProgressBar: true,
+        autoClose: 4000,
+        hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: false,
         theme: 'light',
         transition: Slide,
@@ -65,10 +65,10 @@ export function ContactForm() {
     } else {
       toast.error(response.error || `Something went wrong. Please Try Again`, {
         position: 'bottom-right',
-        autoClose: 2000,
-        hideProgressBar: true,
+        autoClose: 4000,
+        hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: false,
         theme: 'light',
         transition: Slide,
