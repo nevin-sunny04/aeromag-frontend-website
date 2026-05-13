@@ -93,6 +93,8 @@ type AddressFormData = z.infer<typeof addressSchema>;
 export default function Step3() {
   const { data, setData } = useSubStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [billingCityIsOther, setBillingCityIsOther] = useState(false);
+  const [shippingCityIsOther, setShippingCityIsOther] = useState(false);
 
   const {
     register,
@@ -382,6 +384,7 @@ export default function Step3() {
                         onValueChange={(val) => {
                             field.onChange(val);
                             setValue("billingAddress.city", "");
+                            setBillingCityIsOther(false);
                           }}
                       >
                         <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
@@ -409,26 +412,48 @@ export default function Step3() {
                     name="billingAddress.city"
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        disabled={!watchBillingState}
-                      >
-                        <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
-                          <SelectValue
-                            placeholder={
-                              watchBillingState ? "Select City" : "Select state first"
+                      <>
+                        <Select
+                          value={billingCityIsOther ? "__other__" : field.value}
+                          onValueChange={(val) => {
+                            if (val === "__other__") {
+                              setBillingCityIsOther(true);
+                              field.onChange("");
+                            } else {
+                              setBillingCityIsOther(false);
+                              field.onChange(val);
                             }
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-[260px]">
-                          {billingCities.map((c) => (
-                            <SelectItem key={c} value={c} className="text-xs">
-                              {c}
+                          }}
+                          disabled={!watchBillingState}
+                        >
+                          <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                            <SelectValue
+                              placeholder={
+                                watchBillingState ? "Select City" : "Select state first"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[260px]">
+                            {billingCities.map((c) => (
+                              <SelectItem key={c} value={c} className="text-xs">
+                                {c}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value="__other__" className="text-xs font-medium">
+                              Other
                             </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                          </SelectContent>
+                        </Select>
+                        {billingCityIsOther && (
+                          <Input
+                            className="mt-2 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
+                            placeholder="Enter your city"
+                            value={field.value}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            autoFocus
+                          />
+                        )}
+                      </>
                     )}
                   />
                   {errors.billingAddress?.city && (
@@ -528,6 +553,7 @@ export default function Step3() {
                           onValueChange={(val) => {
                             field.onChange(val);
                             setValue("shippingAddress.city", "");
+                            setShippingCityIsOther(false);
                           }}
                         >
                           <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
@@ -555,26 +581,48 @@ export default function Step3() {
                       name="shippingAddress.city"
                       control={control}
                       render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          disabled={!watchShippingState}
-                        >
-                          <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
-                            <SelectValue
-                              placeholder={
-                                watchShippingState ? "Select City" : "Select state first"
+                        <>
+                          <Select
+                            value={shippingCityIsOther ? "__other__" : field.value}
+                            onValueChange={(val) => {
+                              if (val === "__other__") {
+                                setShippingCityIsOther(true);
+                                field.onChange("");
+                              } else {
+                                setShippingCityIsOther(false);
+                                field.onChange(val);
                               }
-                            />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-[260px]">
-                            {shippingCities.map((c) => (
-                              <SelectItem key={c} value={c} className="text-xs">
-                                {c}
+                            }}
+                            disabled={!watchShippingState}
+                          >
+                            <SelectTrigger className="mt-3 w-full border bg-white border-gray-300 rounded-md px-4 h-[40px] text-xs focus:ring-0">
+                              <SelectValue
+                                placeholder={
+                                  watchShippingState ? "Select City" : "Select state first"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[260px]">
+                              {shippingCities.map((c) => (
+                                <SelectItem key={c} value={c} className="text-xs">
+                                  {c}
+                                </SelectItem>
+                              ))}
+                              <SelectItem value="__other__" className="text-xs font-medium">
+                                Other
                               </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                            </SelectContent>
+                          </Select>
+                          {shippingCityIsOther && (
+                            <Input
+                              className="mt-2 w-full border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
+                              placeholder="Enter your city"
+                              value={field.value}
+                              onChange={(e) => field.onChange(e.target.value)}
+                              autoFocus
+                            />
+                          )}
+                        </>
                       )}
                     />
                     {errors.shippingAddress?.city && (
