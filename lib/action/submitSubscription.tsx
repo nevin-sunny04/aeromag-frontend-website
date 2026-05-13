@@ -60,9 +60,9 @@ export async function submitSubscription(
       }
     }
 
-    if (response.error || fieldErrorMessage) {
+    if (response.error || response.detail || fieldErrorMessage) {
       const errorMessage =
-        response.error || fieldErrorMessage || "Something went wrong";
+        response.error || response.detail || fieldErrorMessage || "Something went wrong";
       const alreadySubscribed =
         typeof errorMessage === "string" &&
         errorMessage.toLowerCase().includes("renewal not allowed");

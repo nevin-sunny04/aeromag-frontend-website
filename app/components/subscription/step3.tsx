@@ -270,7 +270,14 @@ export default function Step3() {
       }
     } catch (error) {
       console.error("Subscription error:", error);
-      alert(`An error occurred: ${String(error)}`);
+      toast.error("An error occurred. Please try again.", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        theme: "light",
+      });
     } finally {
       setIsLoading(false);
     }
