@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const response = await apiRequest('subscribe/', {
       method: 'POST',
       body,
+      timeoutMs: 60_000,
     });
     return NextResponse.json(response);
   } catch (error) {
