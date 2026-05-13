@@ -207,7 +207,7 @@ export default function MagazineCard({
 
             <Link
               download={selectedMagazine.title}
-              href={`${process.env.NEXT_PUBLIC_BASE_URL}api/proxy-pdf?url=${selectedMagazine.pdf}`}
+              href={`/api/proxy-pdf?url=${encodeURIComponent(selectedMagazine.pdf || '')}&download=true`}
               className="bg-transparent border-1 border-primary text-sm hover:text-white hover:bg-primary transition-all duration-300 inline-block text-primary px-4 py-2 rounded-sm"
             >
               Download {type.slice(0, -1)}

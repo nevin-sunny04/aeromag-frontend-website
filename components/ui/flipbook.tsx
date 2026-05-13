@@ -18,7 +18,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import Link from 'next/link';
 
-pdfjs.GlobalWorkerOptions.workerSrc = process.env.NEXT_PUBLIC_BASE_URL + 'pdf.worker.mjs';
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 
 type Props = {
   title: string;

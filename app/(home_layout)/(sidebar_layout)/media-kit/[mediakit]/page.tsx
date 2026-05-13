@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: Promise<{ mediakit: str
     <>
       <FlipBook
         title={mediakitData.title}
-        pdfUrl={`${process.env.NEXT_PUBLIC_BASE_URL}api/proxy-pdf?url=${mediakitData.pdf}`}
+        pdfUrl={`/api/proxy-pdf?url=${encodeURIComponent(mediakitData.pdf || '')}`}
       />
     </>
   );

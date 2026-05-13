@@ -79,7 +79,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
 
                     <Link
                       download={kit.title}
-                      href={`${process.env.NEXT_PUBLIC_APP_URL}${process.env.NEXT_PUBLIC_BASE_URL}api/proxy-pdf?url=${kit.pdf}`}
+                      href={`/api/proxy-pdf?url=${encodeURIComponent(kit.pdf || '')}&download=true`}
                       className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-medium py-2 px-3 rounded-sm transition-all duration-300 flex items-center justify-center gap-1 group/btn border border-gray-200"
                     >
                       <Download className="w-4 h-4 group-hover/btn:translate-y-0.5 transition-transform" />
