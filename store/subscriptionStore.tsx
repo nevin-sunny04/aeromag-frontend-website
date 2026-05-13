@@ -29,7 +29,7 @@ export interface PaymentDetails {
 }
 
 export interface SubscriptionData {
-  currentStep: 1 | 2 | 3;
+  currentStep: 1 | 2 | 3 | 4;
   email?: string;
   subscriber?: Subscriber;
   subscription?: SubscriptionDetails;

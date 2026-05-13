@@ -5,6 +5,7 @@ import { useSubStore } from '@/store/subscriptionStore';
 import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
+import SuccessStep from './SuccessStep';
 
 export default function RenderStep({ plans }: { plans: Plan[] }) {
   const { data } = useSubStore();
@@ -15,6 +16,8 @@ export default function RenderStep({ plans }: { plans: Plan[] }) {
       return <Step2 plans={plans} />;
     case 3:
       return <Step3 />;
+    case 4:
+      return <SuccessStep />;
     default:
       return null;
   }

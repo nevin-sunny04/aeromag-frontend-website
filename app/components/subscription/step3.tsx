@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -84,8 +83,7 @@ const addressSchema = z
 type AddressFormData = z.infer<typeof addressSchema>;
 
 export default function Step3() {
-  const router = useRouter();
-  const { data, setData, resetSubs } = useSubStore();
+  const { data, setData } = useSubStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -208,9 +206,19 @@ export default function Step3() {
             const res = await verifySubscription(verifyPayload);
             console.log("verifySubscription response:", res);
             if (res.success) {
-              resetSubs();
-              router.push(
-                `/?success=true&plan_id=${data.subscription?.plan_id}&email=${data.email}`,
+              setData('currentStep', 4);
+            } else {
+              const errorMsg = res.error || res.message || 'Verification failed. Contact support.';
+              toast.error(
+                `Payment received but verification failed: ${errorMsg}. Please contact support with payment ID: ${response.razorpay_payment_id}`,
+                {
+                  position: 'bottom-right',
+                  autoClose: 10000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  theme: 'light',
+                },
               );
             }
           },
