@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import { INDIA_CITIES, INDIA_STATES } from "@/lib/india-locations";
 import { submitSubscription } from "@/lib/action/submitSubscription";
-import { verifySubscription } from "@/lib/action/verifySubscription";
 import {
   type Address,
   type Subscriber,
@@ -93,6 +92,7 @@ type AddressFormData = z.infer<typeof addressSchema>;
 export default function Step3() {
   const { data, setData } = useSubStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
   const [billingCityIsOther, setBillingCityIsOther] = useState(false);
   const [shippingCityIsOther, setShippingCityIsOther] = useState(false);
 
@@ -209,7 +209,7 @@ export default function Step3() {
               ? result.data.razorpay_order_id
               : undefined,
 
-          handler: async function (response: RazorResponse) {
+            handler: async function (response: RazorResponse) {
             const verifyPayload = {
               step: "payment_verify",
 
@@ -223,22 +223,19 @@ export default function Step3() {
               razorpay_signature: response.razorpay_signature,
             };
             console.log("verifySubscription payload:", verifyPayload);
-            const res = await verifySubscription(verifyPayload);
+            const res = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(verifyPayload),
+            }).then(r => r.json());
             console.log("verifySubscription response:", res);
             if (res.success) {
+              setVerifyError(null);
               setData('currentStep', 4);
             } else {
               const errorMsg = res.error || res.message || 'Verification failed. Contact support.';
-              toast.error(
-                `Payment received but verification failed: ${errorMsg}. Please contact support with payment ID: ${response.razorpay_payment_id}`,
-                {
-                  position: 'bottom-right',
-                  autoClose: 10000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  theme: 'light',
-                },
+              setVerifyError(
+                `Payment received but verification failed: ${errorMsg}. Please contact support with your payment ID: ${response.razorpay_payment_id}`
               );
             }
           },
@@ -664,6 +661,12 @@ export default function Step3() {
             <p className="text-sm text-red-500">
               {errors.shippingAddress.message}
             </p>
+          )}
+
+          {verifyError && (
+            <div className="p-4 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
+              {verifyError}
+            </div>
           )}
 
           <div className="flex space-x-4">
