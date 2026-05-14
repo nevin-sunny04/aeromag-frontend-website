@@ -129,8 +129,8 @@ const addressSchema = z
     phone_code: z.string().min(1, "Please select a country code"),
     phone_number: z
       .string()
-      .min(7, "Phone number must be at least 7 digits")
-      .max(15, "Phone number is too long"),
+      .min(7, "Enter a valid phone number")
+      .max(15, "Enter a valid phone number"),
     isInternational: z.boolean(),
     billingAddress: z.object({
       address1: z.string().min(1, "Address is required"),
@@ -216,9 +216,10 @@ export default function Step3() {
     watch,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
+    mode: 'onTouched',
     defaultValues: {
       name: data.subscriber?.billing_address?.name || "",
       company_name: data.subscriber?.company_name || "",
@@ -821,7 +822,7 @@ export default function Step3() {
             >
               Previous
             </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={!isValid || !!nameError || isLoading} className="flex-1">
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
