@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { INDIA_CITIES, INDIA_STATES } from "@/lib/india-locations";
-import { submitSubscription } from "@/lib/action/submitSubscription";
+import { submitSubscription, checkSubscriberName } from "@/lib/action/submitSubscription";
 import {
   type Address,
   type Subscriber,
@@ -204,6 +204,7 @@ export default function Step3() {
   const { data, setData } = useSubStore();
   const isInternational = data.isInternational ?? false;
   const [isLoading, setIsLoading] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
   const [verifyError, setVerifyError] = useState<string | null>(null);
   const keepAliveRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [billingCityIsOther, setBillingCityIsOther] = useState(false);
@@ -256,6 +257,7 @@ export default function Step3() {
     : [];
 
   const onSubmit = async (formData: AddressFormData) => {
+    if (nameError) return;
     setIsLoading(true);
 
     const billingAddress: Address = {
@@ -425,8 +427,26 @@ export default function Step3() {
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-[16px]">Full Name</Label>
-            <Input className={inputClass} id="name" type="text" placeholder="Enter your full name" {...register("name")} />
+            <Input
+              className={inputClass}
+              id="name"
+              type="text"
+              placeholder="Enter your full name"
+              {...register("name")}
+              onBlur={async (e) => {
+                const name = e.target.value.trim();
+                setNameError(null);
+                if (!name || !data.email) return;
+                const result = await checkSubscriberName(data.email, name);
+                if (result.hasActiveSubscription) {
+                  setNameError(
+                    `${name} already has an active ${result.planName} subscription under this email (valid until ${result.endDate}). Please use a different name.`
+                  );
+                }
+              }}
+            />
             {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+            {nameError && <p className="text-sm text-red-500">{nameError}</p>}
           </div>
 
           {/* Company Name */}

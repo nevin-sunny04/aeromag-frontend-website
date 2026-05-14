@@ -38,6 +38,25 @@ interface verifyemail {
   email: string;
 }
 
+export async function checkSubscriberName(email: string, name: string) {
+  try {
+    const response = await apiRequest("subscribe/", {
+      method: "POST",
+      body: { step: "check_name", email, name },
+    });
+    if (response.has_active_subscription) {
+      return {
+        hasActiveSubscription: true,
+        planName: response.plan_name as string,
+        endDate: response.end_date as string,
+      };
+    }
+    return { hasActiveSubscription: false };
+  } catch {
+    return { hasActiveSubscription: false };
+  }
+}
+
 export async function submitSubscription(
   data: SubscriptionPayload | verifyemail,
 ) {
