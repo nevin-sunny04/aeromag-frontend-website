@@ -56,13 +56,80 @@ const COUNTRIES = [
   "United States", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Zimbabwe",
 ];
 
+const PHONE_CODES = [
+  { code: "+91",  label: "🇮🇳 +91"  },
+  { code: "+1",   label: "🇺🇸 +1"   },
+  { code: "+44",  label: "🇬🇧 +44"  },
+  { code: "+61",  label: "🇦🇺 +61"  },
+  { code: "+64",  label: "🇳🇿 +64"  },
+  { code: "+971", label: "🇦🇪 +971" },
+  { code: "+966", label: "🇸🇦 +966" },
+  { code: "+974", label: "🇶🇦 +974" },
+  { code: "+965", label: "🇰🇼 +965" },
+  { code: "+968", label: "🇴🇲 +968" },
+  { code: "+973", label: "🇧🇭 +973" },
+  { code: "+65",  label: "🇸🇬 +65"  },
+  { code: "+60",  label: "🇲🇾 +60"  },
+  { code: "+62",  label: "🇮🇩 +62"  },
+  { code: "+63",  label: "🇵🇭 +63"  },
+  { code: "+66",  label: "🇹🇭 +66"  },
+  { code: "+84",  label: "🇻🇳 +84"  },
+  { code: "+95",  label: "🇲🇲 +95"  },
+  { code: "+855", label: "🇰🇭 +855" },
+  { code: "+81",  label: "🇯🇵 +81"  },
+  { code: "+82",  label: "🇰🇷 +82"  },
+  { code: "+86",  label: "🇨🇳 +86"  },
+  { code: "+886", label: "🇹🇼 +886" },
+  { code: "+852", label: "🇭🇰 +852" },
+  { code: "+92",  label: "🇵🇰 +92"  },
+  { code: "+880", label: "🇧🇩 +880" },
+  { code: "+94",  label: "🇱🇰 +94"  },
+  { code: "+977", label: "🇳🇵 +977" },
+  { code: "+49",  label: "🇩🇪 +49"  },
+  { code: "+33",  label: "🇫🇷 +33"  },
+  { code: "+39",  label: "🇮🇹 +39"  },
+  { code: "+34",  label: "🇪🇸 +34"  },
+  { code: "+31",  label: "🇳🇱 +31"  },
+  { code: "+46",  label: "🇸🇪 +46"  },
+  { code: "+47",  label: "🇳🇴 +47"  },
+  { code: "+45",  label: "🇩🇰 +45"  },
+  { code: "+358", label: "🇫🇮 +358" },
+  { code: "+41",  label: "🇨🇭 +41"  },
+  { code: "+43",  label: "🇦🇹 +43"  },
+  { code: "+32",  label: "🇧🇪 +32"  },
+  { code: "+351", label: "🇵🇹 +351" },
+  { code: "+48",  label: "🇵🇱 +48"  },
+  { code: "+7",   label: "🇷🇺 +7"   },
+  { code: "+380", label: "🇺🇦 +380" },
+  { code: "+36",  label: "🇭🇺 +36"  },
+  { code: "+40",  label: "🇷🇴 +40"  },
+  { code: "+420", label: "🇨🇿 +420" },
+  { code: "+30",  label: "🇬🇷 +30"  },
+  { code: "+90",  label: "🇹🇷 +90"  },
+  { code: "+972", label: "🇮🇱 +972" },
+  { code: "+962", label: "🇯🇴 +962" },
+  { code: "+961", label: "🇱🇧 +961" },
+  { code: "+55",  label: "🇧🇷 +55"  },
+  { code: "+52",  label: "🇲🇽 +52"  },
+  { code: "+54",  label: "🇦🇷 +54"  },
+  { code: "+57",  label: "🇨🇴 +57"  },
+  { code: "+56",  label: "🇨🇱 +56"  },
+  { code: "+27",  label: "🇿🇦 +27"  },
+  { code: "+234", label: "🇳🇬 +234" },
+  { code: "+254", label: "🇰🇪 +254" },
+  { code: "+20",  label: "🇪🇬 +20"  },
+  { code: "+212", label: "🇲🇦 +212" },
+  { code: "+233", label: "🇬🇭 +233" },
+];
+
 const addressSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
     company_name: z.string().optional(),
+    phone_code: z.string().min(1, "Please select a country code"),
     phone_number: z
       .string()
-      .min(10, "Phone number must be at least 10 digits")
+      .min(7, "Phone number must be at least 7 digits")
       .max(15, "Phone number is too long"),
     isInternational: z.boolean(),
     billingAddress: z.object({
@@ -154,6 +221,7 @@ export default function Step3() {
     defaultValues: {
       name: data.subscriber?.billing_address?.name || "",
       company_name: data.subscriber?.company_name || "",
+      phone_code: isInternational ? "" : "+91",
       phone_number: data.subscriber?.billing_address?.phone_number || "",
       isInternational,
       billingAddress: {
@@ -193,7 +261,7 @@ export default function Step3() {
     const billingAddress: Address = {
       email: data.email || "",
       name: formData.name,
-      phone_number: formData.phone_number,
+      phone_number: `${formData.phone_code}${formData.phone_number}`,
       address1: formData.billingAddress.address1,
       address2: formData.billingAddress.address2 || "",
       city: formData.billingAddress.city,
@@ -207,7 +275,7 @@ export default function Step3() {
       : {
           email: data.email || "",
           name: formData.name,
-          phone_number: formData.phone_number,
+          phone_number: `${formData.phone_code}${formData.phone_number}`,
           address1: formData.shippingAddress?.address1 || "",
           address2: formData.shippingAddress?.address2 || "",
           city: formData.shippingAddress?.city || "",
@@ -361,9 +429,40 @@ export default function Step3() {
 
           {/* Phone Number */}
           <div className="space-y-2">
-            <Label htmlFor="phone_number" className="text-[16px]">Phone Number</Label>
-            <Input className={inputClass} id="phone_number" type="tel" placeholder="Enter your phone number" {...register("phone_number")} />
-            {errors.phone_number && <p className="text-sm text-red-500">{errors.phone_number.message}</p>}
+            <Label className="text-[16px]">Phone Number</Label>
+            <div className="flex gap-2 mt-3">
+              <Controller
+                name="phone_code"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-28 shrink-0 border bg-white border-gray-300 rounded-md px-3 h-[40px] text-xs focus:ring-0">
+                      <SelectValue placeholder="Code" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[260px]">
+                      {PHONE_CODES.map((p) => (
+                        <SelectItem key={p.code} value={p.code} className="text-xs">
+                          {p.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <Input
+                className="flex-1 border placeholder:font-normal bg-white placeholder:text-gray-500 placeholder:text-sm border-gray-300 rounded-md px-4 h-[40px] text-xs focus-visible:ring-0"
+                id="phone_number"
+                type="tel"
+                placeholder="Enter your phone number"
+                {...register("phone_number")}
+              />
+            </div>
+            {errors.phone_code && (
+              <p className="text-sm text-red-500">{errors.phone_code.message}</p>
+            )}
+            {errors.phone_number && (
+              <p className="text-sm text-red-500">{errors.phone_number.message}</p>
+            )}
           </div>
 
           {/* Billing Address */}

@@ -98,7 +98,7 @@ export default function Step2({ plans }: { plans: Plan[] }) {
         <button
           type="button"
           onClick={() => handleMarketToggle(false)}
-          className={`px-5 py-2 text-sm font-medium transition-colors ${
+          className={`w-40 py-2 text-sm font-medium transition-colors ${
             !isInternational
               ? 'bg-primary text-white'
               : 'bg-white text-gray-600 hover:bg-gray-50'
@@ -109,13 +109,13 @@ export default function Step2({ plans }: { plans: Plan[] }) {
         <button
           type="button"
           onClick={() => handleMarketToggle(true)}
-          className={`px-5 py-2 text-sm font-medium transition-colors ${
+          className={`w-40 py-2 text-sm font-medium transition-colors ${
             isInternational
               ? 'bg-primary text-white'
               : 'bg-white text-gray-600 hover:bg-gray-50'
           }`}
         >
-          🌐 International (USD)
+          🌐 Overseas (USD)
         </button>
       </div>
 
@@ -190,12 +190,6 @@ export default function Step2({ plans }: { plans: Plan[] }) {
 
         {/* Auto-renewal only available for India (INR) plans */}
         {!isInternational && <SubscriptionAutoRenewal />}
-
-        {isInternational && (
-          <p className="text-sm text-gray-500">
-            Auto-renewal is not available for international subscriptions.
-          </p>
-        )}
 
         <div className="flex space-x-4">
           <Button
