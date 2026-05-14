@@ -92,7 +92,7 @@ export default function Step1() {
                 remaining).
               </p>
               <p className="text-sm text-amber-700 mt-2">
-                A new subscription will start from today and overlap with the existing one.
+                To add another subscription under the same email, continue with a different subscriber name on the next step.
               </p>
             </div>
           </div>
