@@ -10,6 +10,7 @@ export interface Address {
   city: string;
   state: string;
   pincode: string;
+  country?: string;
 }
 
 export interface Subscriber {
@@ -31,6 +32,7 @@ export interface PaymentDetails {
 export interface SubscriptionData {
   currentStep: 1 | 2 | 3 | 4;
   email?: string;
+  isInternational?: boolean;
   subscriber?: Subscriber;
   subscription?: SubscriptionDetails;
   payment?: PaymentDetails;
@@ -50,6 +52,7 @@ export const useSubStore = create<subsStore>()(
       data: {
         sameAsBilling: true,
         currentStep: 1,
+        isInternational: false,
         subscription: {
           plan_id: 0,
           auto_renew: false,
@@ -85,6 +88,7 @@ export const useSubStore = create<subsStore>()(
             data: {
               sameAsBilling: true,
               currentStep: 1,
+              isInternational: false,
               subscription: {
                 plan_id: 0,
                 auto_renew: false,

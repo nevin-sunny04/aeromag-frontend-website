@@ -93,11 +93,13 @@ export interface GalleryItem extends BaseItem {
 
 export interface Plan {
   id: number;
-  duration_type: 'yearly' | 'monthly';
+  name: string;
+  duration_type: 'yearly' | 'monthly' | 'quarterly';
   features: null | string[];
   duration_period: number;
   price: number;
   offer_price: number;
+  currency: 'INR' | 'USD';
 }
 
 export interface Podcast {

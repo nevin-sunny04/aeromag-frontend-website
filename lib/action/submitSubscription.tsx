@@ -11,6 +11,7 @@ interface Address {
   city: string;
   state: string;
   pincode: string;
+  country?: string;
 }
 interface Subscriber {
   email: string;
@@ -45,6 +46,19 @@ export async function submitSubscription(
       method: "POST",
       body: data,
     });
+
+    // Step 1: check for active subscription warning (success but with warning data)
+    if (response.success === true && response.has_active_subscription === true) {
+      return {
+        success: true,
+        hasActiveSubscription: true,
+        subscriberName: response.subscriber_name as string,
+        planName: response.plan_name as string,
+        endDate: response.end_date as string,
+        daysRemaining: response.days_remaining as number,
+        data: response,
+      };
+    }
 
     // Extract field-level validation errors (e.g. { email: ['...message...'] })
     const fieldErrors: Record<string, string[]> = {};
