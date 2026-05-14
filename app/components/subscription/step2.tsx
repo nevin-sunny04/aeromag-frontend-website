@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -93,6 +93,15 @@ export default function Step2({ plans }: { plans: Plan[] }) {
 
   return (
     <div className="space-y-6 lg:w-[750px]">
+      <button
+        type="button"
+        onClick={() => setData('currentStep', 1)}
+        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+
       {/* India / International toggle */}
       <div className="flex rounded-lg overflow-hidden border border-gray-300 w-fit">
         <button

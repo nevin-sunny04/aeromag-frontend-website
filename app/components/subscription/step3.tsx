@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Script from "next/script";
 import { useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -412,6 +412,15 @@ export default function Step3() {
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
       <div className="space-y-6 lg:w-[700px]">
+        <button
+          type="button"
+          onClick={() => setData("currentStep", 2)}
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Name */}
           <div className="space-y-2">
